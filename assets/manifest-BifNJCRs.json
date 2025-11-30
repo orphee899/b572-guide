@@ -1,0 +1,22 @@
+{
+  "short_name": "B572",
+  "name": "Guide Surveillance B572",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3523/3523063.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3523/3523063.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "scope": ".",
+  "display": "standalone",
+  "theme_color": "#001A70",
+  "background_color": "#ffffff",
+  "orientation": "portrait"
+}
