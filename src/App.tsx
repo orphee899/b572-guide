@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { 
   AlertTriangle, 
@@ -41,7 +40,6 @@ export default function App() {
     }
   };
 
-  // Helper pour obtenir les références de chapitres dynamiques
   const getSectionReferences = (section: 2 | 3 | 4 | 5, type: TestType): string => {
     switch (type) {
       case TestType.TRACTION_AMBIANT:
@@ -73,7 +71,6 @@ export default function App() {
   };
 
   const generateCSV = () => {
-    // Basic headers
     const headers = [
       'Type Essai', 'Date', 'Inspecteur', 'CRA', 'Conflit Interet',
       'Labo', 'ISO17025', 'No Accr/Proc Indus', 'Date Validite', 'Proc Etalonnage', 'Doc Suivi', 'Suivi Complet', 'Verif Contrat', 'Operateur', 'Habilite',
@@ -84,7 +81,6 @@ export default function App() {
       'PV Conforme', 'Fichiers Bruts Dispo'
     ];
 
-    // Simple mapping for demo purposes
     const row = [
       data.selectedTestType,
       data.inspectionDate,
@@ -129,8 +125,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen pb-24 bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
+      <header className="bg-white border-b sticky top-0 z-50 shadow-sm pt-[env(safe-area-inset-top)]">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
@@ -140,12 +135,11 @@ export default function App() {
             <p className="text-xs font-semibold text-gray-400">Rév. 05</p>
           </div>
           
-          {/* Main Selector - Always Visible */}
           <div className="mt-2">
             <select
               value={data.selectedTestType}
               onChange={(e) => setData({...INITIAL_STATE, selectedTestType: e.target.value as TestType})}
-              className="w-full bg-edf-blue text-white font-bold py-3 px-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-edf-blue appearance-none"
+              className="w-full bg-edf-blue text-white font-bold py-3 px-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-edf-blue appearance-none text-base"
               style={{ backgroundImage: 'none' }}
             >
               <option value={TestType.TRACTION_AMBIANT}>TRACTION - AMBIANT (20°C)</option>
@@ -180,16 +174,15 @@ export default function App() {
               
               {!data.conflictOfInterest ? (
                 <p className="text-xs text-gray-500 pl-9">
-                    S'assurer qu'il n'existe aucun risque (parenté, amitié, subordination) pouvant amener une suspicion sur l'impartialité.
+                    S'assurer qu'il n'existe aucun risque (parenté, amitié, subordination).
                 </p>
               ) : (
                 <div className="mt-3 pl-2 border-l-4 border-red-500 ml-1">
                    <div className="flex items-start gap-2 text-red-700">
                      <AlertTriangle className="shrink-0 mt-0.5" size={18} />
                      <div className="flex flex-col">
-                       <span className="font-bold uppercase text-sm">Action Requise (Non Bloquant)</span>
-                       <span className="font-semibold">Vous devez informer votre hiérarchie dans les plus brefs délais.</span>
-                       <span className="text-xs italic mt-1 opacity-80">(Indiquez également cette situation dans le CRA)</span>
+                       <span className="font-bold uppercase text-sm">Action Requise</span>
+                       <span className="font-semibold">Informer hiérarchie.</span>
                      </div>
                    </div>
                 </div>
@@ -197,10 +190,11 @@ export default function App() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* RESPONSIVE GRID ICI */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input label="Date" type="date" value={data.inspectionDate} onChange={(e) => updateField('inspectionDate', e.target.value)} />
             <Input label="Inspecteur" value={data.inspectorName} onChange={(e) => updateField('inspectorName', e.target.value)} />
-            <Input label="N° Affaire / CRA" className="col-span-2" value={data.craNumber} onChange={(e) => updateField('craNumber', e.target.value)} />
+            <Input label="N° Affaire / CRA" className="md:col-span-2" value={data.craNumber} onChange={(e) => updateField('craNumber', e.target.value)} />
           </div>
 
           <div className="mt-6 pt-6 border-t border-gray-100">
@@ -210,7 +204,6 @@ export default function App() {
             
             <Input label="Laboratoire" value={data.labName} onChange={(e) => updateField('labName', e.target.value)} />
 
-            {/* Switch ISO 17025 */}
             <div className="mb-4 bg-blue-50 p-3 rounded-lg border border-blue-100">
               <div className="flex items-center gap-3 mb-3">
                  <div 
@@ -223,7 +216,8 @@ export default function App() {
               </div>
 
               {data.isIso17025 ? (
-                <div className="grid grid-cols-2 gap-4 animate-in fade-in">
+                /* RESPONSIVE GRID ICI */
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in">
                   <Input 
                     label="N° Accréditation" 
                     value={data.accreditationNumber} 
@@ -243,7 +237,7 @@ export default function App() {
                     label="Réf. Procédure Industrielle" 
                     value={data.industrialProcedureRef} 
                     onChange={(e) => updateField('industrialProcedureRef', e.target.value)}
-                    helperText="Si non accrédité, recenser les procédures et spécifications de l'industriel."
+                    helperText="Si non accrédité, recenser les procédures."
                   />
                 </div>
               )}
@@ -254,20 +248,21 @@ export default function App() {
               value={data.calibrationControlProcedure}
               onChange={(e) => updateField('calibrationControlProcedure', e.target.value)}
               guidePoint="Point 1001"
-              guideText="Vérifier l'établissement d'une procédure de contrôle et d'étalonnage périodique des machines, extensomètres et thermocouples."
+              guideText="Vérifier l'établissement d'une procédure de contrôle."
             />
 
-            <div className="grid grid-cols-3 gap-3 items-start mb-4">
+            {/* RESPONSIVE GRID ICI */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start mb-4">
               <Input 
                 label="Réf. Doc de Suivi" 
-                className="col-span-2 mb-0"
+                className="md:col-span-2 mb-0"
                 value={data.followUpDocRef} 
                 onChange={(e) => updateField('followUpDocRef', e.target.value)}
                 guidePoint="Point 1001"
                 guideText="Fiche suiveuse ou gamme."
               />
               <div 
-                className={`flex flex-col items-center justify-center p-2 rounded-lg border h-[72px] cursor-pointer transition-colors mt-[22px] ${data.isFollowUpDocComplete ? 'bg-green-50 border-green-200 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-400'}`}
+                className={`flex flex-col items-center justify-center p-2 rounded-lg border h-[72px] cursor-pointer transition-colors mt-4 md:mt-[22px] ${data.isFollowUpDocComplete ? 'bg-green-50 border-green-200 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-400'}`}
                 onClick={() => updateField('isFollowUpDocComplete', !data.isFollowUpDocComplete)}
               >
                  {data.isFollowUpDocComplete ? <CheckCircle2 size={24}/> : <XCircle size={24}/>}
@@ -277,64 +272,62 @@ export default function App() {
 
             <Input 
               label="Vérification Conformité Documents / Contrats"
-              placeholder="Spécifier les vérifications faites (Points vérifiés dans le CRA)..."
+              placeholder="Spécifier les vérifications faites..."
               value={data.docConformityCheck}
               onChange={(e) => updateField('docConformityCheck', e.target.value)}
               guidePoint="Point 1002"
-              guideText="Vérifier la conformité des documents de l'industriel par rapport aux prescriptifs contractuels."
+              guideText="Vérifier la conformité des documents."
             />
 
             <div className="mt-4 pt-4 border-t border-dashed border-gray-300">
-               <div className="flex items-end gap-3">
+               <div className="flex flex-col md:flex-row items-end gap-3">
                  <Input 
                    label="Nom Opérateur" 
-                   className="flex-1 mb-0"
+                   className="w-full mb-0"
                    value={data.operatorName} 
                    onChange={(e) => updateField('operatorName', e.target.value)} 
                  />
                  <div 
-                  className={`flex items-center gap-2 p-3 rounded-lg border h-[52px] cursor-pointer mb-[2px] ${data.isOperatorQualified ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'}`}
+                  className={`w-full md:w-auto flex items-center gap-2 p-3 rounded-lg border h-[52px] cursor-pointer mb-[2px] ${data.isOperatorQualified ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'}`}
                   onClick={() => updateField('isOperatorQualified', !data.isOperatorQualified)}
                  >
                     <div className={`w-5 h-5 rounded border flex items-center justify-center ${data.isOperatorQualified ? 'bg-edf-blue border-edf-blue' : 'bg-white border-gray-400'}`}>
                       {data.isOperatorQualified && <UserCheck size={14} className="text-white"/>}
                     </div>
-                    <span className="text-xs font-bold text-gray-700">Formé & Habilité (1003)</span>
+                    <span className="text-xs font-bold text-gray-700 whitespace-nowrap">Formé & Habilité (1003)</span>
                  </div>
                </div>
             </div>
           </div>
         </CollapsibleSection>
 
-        {/* Section 2: Machine (Dynamic) */}
+        {/* Section 2: Machine */}
         <CollapsibleSection 
           title={`2. Machine & Moyens ${getSectionReferences(2, data.selectedTestType)}`} 
           icon={HardDrive} 
           defaultOpen={true}
         >
-          
           <div className="mb-6">
              <Input 
-                label="Numéro identification machine de traction" 
+                label="Numéro identification machine" 
                 value={data.machineRef} 
                 onChange={(e) => updateField('machineRef', e.target.value)} 
              />
              <Input 
-                label="N° Rapport Étalonnage / Constat Vérif." 
+                label="N° Rapport Étalonnage" 
                 value={data.calibrationReportNumber} 
                 onChange={(e) => updateField('calibrationReportNumber', e.target.value)}
                 guidePoint="Point 2101"
-                guideText="Vérifier le contenu du rapport d'étalonnage (PV conforme à la norme applicable)."
+                guideText="Vérifier le contenu du rapport d'étalonnage."
              />
              
-             <div className="grid grid-cols-2 gap-4 mt-4">
+             {/* RESPONSIVE GRID ICI */}
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                <Input 
                  label="Date Étalonnage" 
                  type="date" 
                  value={data.calibrationDate} 
                  onChange={(e) => updateField('calibrationDate', e.target.value)} 
-                 guidePoint={data.selectedTestType === TestType.TRACTION_AMBIANT ? "Point 2101" : undefined}
-                 guideText={data.selectedTestType === TestType.TRACTION_AMBIANT ? "Vérifier la validité." : undefined}
                />
                <Input 
                  label="Date Vérif. Interne" 
@@ -342,18 +335,17 @@ export default function App() {
                  value={data.internalCheckDate} 
                  onChange={(e) => updateField('internalCheckDate', e.target.value)} 
                  guidePoint={data.selectedTestType === TestType.TRACTION_AMBIANT ? "Point 2101" : undefined}
-                 guideText="Date de réalisation des dernières vérifications internes (test d'une éprouvette de référence du type éprouvette du LNE ou équivalent)."
+                 guideText="Dernières vérifications internes."
                />
              </div>
 
              {(data.selectedTestType !== TestType.FLEXION) && (
-              <div className="grid grid-cols-2 gap-4 mt-4">
+              /* RESPONSIVE GRID ICI */
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <Input 
                     label="Logiciel" 
                     value={data.softwareName} 
                     onChange={(e) => updateField('softwareName', e.target.value)} 
-                    guidePoint="Point 2101"
-                    guideText="Si utilisation logiciel : vérifier que la version est identique à celle du PV d'étalonnage."
                 />
                 <Input label="Version" value={data.softwareVersion} onChange={(e) => updateField('softwareVersion', e.target.value)} />
               </div>
@@ -364,13 +356,12 @@ export default function App() {
           {data.selectedTestType === TestType.TRACTION_AMBIANT && (
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
               <h4 className="text-sm font-bold text-edf-blue mb-3">Spécifique Traction Ambiante (2101)</h4>
-              <div className="grid grid-cols-2 gap-4">
+              {/* RESPONSIVE GRID ICI */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input 
                   label="Extensomètre" 
                   value={data.extensometerRef} 
                   onChange={(e) => updateField('extensometerRef', e.target.value)} 
-                  guidePoint="Point 2101"
-                  guideText="Vérifier le contenu du rapport d'étalonnage de l'extensomètre."
                 />
                 <Input 
                   label="Validité Extenso." 
@@ -382,15 +373,11 @@ export default function App() {
                   label="Température Local" 
                   value={data.ambientTemp} 
                   onChange={(e) => updateField('ambientTemp', e.target.value)} 
-                  guidePoint="Point 2101"
-                  guideText="S'assurer des conditions d'ambiance du local d'essai (Température)."
                 />
                 <Input 
                   label="Hygrométrie Local" 
                   value={data.ambientHygro} 
                   onChange={(e) => updateField('ambientHygro', e.target.value)} 
-                  guidePoint="Point 2101"
-                  guideText="S'assurer des conditions d'ambiance du local d'essai (Hygrométrie)."
                 />
               </div>
             </div>
@@ -398,23 +385,19 @@ export default function App() {
 
           {data.selectedTestType === TestType.TRACTION_HAUTE_TEMP && (
              <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
-               <h4 className="text-sm font-bold text-orange-800 mb-3 flex items-center gap-2"><Flame size={16}/> Spécifique Haute Temp (2201/2203)</h4>
+               <h4 className="text-sm font-bold text-orange-800 mb-3 flex items-center gap-2"><Flame size={16}/> Spécifique Haute Temp</h4>
                <div className="grid grid-cols-1 gap-4">
                  <Input 
                     label="Système mesure temp." 
-                    placeholder="Ref thermocouples/enregistreur..." 
+                    placeholder="Ref thermocouples..." 
                     value={data.tempMeasureSystemRef} 
                     onChange={(e) => updateField('tempMeasureSystemRef', e.target.value)} 
-                    guidePoint="Point 2203"
-                    guideText="Vérifier constat vérification du système de mesure (Thermocouples, enregistreur). Résolution min 1°C."
                 />
                  <Input 
                     label="Position Thermocouples" 
                     placeholder="Contact éprouvette..." 
                     value={data.thermocouplePosition} 
                     onChange={(e) => updateField('thermocouplePosition', e.target.value)} 
-                    guidePoint="Point 2204"
-                    guideText="Vérifier le nombre et la position (contact direct avec éprouvette)."
                  />
                  <Input label="Extensomètre HT" value={data.extensometerRef} onChange={(e) => updateField('extensometerRef', e.target.value)} />
                </div>
@@ -424,14 +407,13 @@ export default function App() {
           {data.selectedTestType === TestType.FLEXION && (
             <div className="bg-gray-100 p-4 rounded-lg border border-gray-200">
                <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2"><Hammer size={16}/> Spécifique Mouton (2301)</h4>
-               <div className="grid grid-cols-2 gap-4">
+               {/* RESPONSIVE GRID ICI */}
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Select 
                     label="Rayon Couteau" 
                     value={data.knifeRadius} 
                     onChange={(e) => updateField('knifeRadius', e.target.value)}
                     options={[{value: '2mm', label: '2 mm'}, {value: '8mm', label: '8 mm'}]}
-                    guidePoint="Point 2301"
-                    guideText="Vérifier le type de couteau utilisé (Rayon 2mm ou 8mm)."
                   />
                   <Input label="Vérif Enclumes/Supports" value={data.moutonAnvilCheck} onChange={(e) => updateField('moutonAnvilCheck', e.target.value)} />
                </div>
@@ -444,24 +426,24 @@ export default function App() {
 
         </CollapsibleSection>
 
-        {/* Section 3: Specimen (Dynamic) */}
+        {/* Section 3: Specimen */}
         <CollapsibleSection 
           title={`3. L'Éprouvette ${getSectionReferences(3, data.selectedTestType)}`} 
           icon={Microscope} 
           defaultOpen={true}
         >
-          <div className="grid grid-cols-2 gap-4">
+          {/* RESPONSIVE GRID ICI */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input 
                 label="Référence" 
                 value={data.specimenRef} 
                 onChange={(e) => updateField('specimenRef', e.target.value)} 
                 guidePoint="Point 2102"
-                guideText="Vérifier l'identification ainsi que le repérage correct des blocs."
+                guideText="Vérifier l'identification."
             />
             <Input label="Nuance" value={data.materialGrade} onChange={(e) => updateField('materialGrade', e.target.value)} />
             <Input label="Nombre d'éprouvettes" type="number" value={data.specimenCount} onChange={(e) => updateField('specimenCount', e.target.value)} />
             
-            {/* Dimension checks for Traction */}
             {(data.selectedTestType === TestType.TRACTION_AMBIANT || data.selectedTestType === TestType.TRACTION_HAUTE_TEMP) && (
               <>
                  <Input 
@@ -469,10 +451,9 @@ export default function App() {
                     placeholder="Pied à coulisse..." 
                     value={data.measuringDeviceRef} 
                     onChange={(e) => updateField('measuringDeviceRef', e.target.value)} 
-                    guidePoint="Point 2102"
-                    guideText="S'assurer que les appareils sont étalonnés et valides."
                  />
-                 <div className="col-span-2 grid grid-cols-2 gap-4 bg-yellow-50 p-3 rounded">
+                 {/* RESPONSIVE GRID IMBRIQUÉ */}
+                 <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 bg-yellow-50 p-3 rounded">
                     <Input label="Section Théorique" type="number" value={data.theoreticalSection} onChange={(e) => updateField('theoreticalSection', e.target.value)} />
                     <Input 
                         label="Section Réelle" 
@@ -480,22 +461,18 @@ export default function App() {
                         value={data.measuredSection} 
                         onChange={(e) => updateField('measuredSection', e.target.value)} 
                         guidePoint="Point 2102"
-                        guideText="Vérifier que ce sont les dimensions réelles (non théoriques) utilisées pour le calcul."
+                        guideText="Utiliser les dimensions réelles."
                     />
                  </div>
               </>
             )}
 
-            {/* Notch check for Flexion */}
             {data.selectedTestType === TestType.FLEXION && (
-               <div className="col-span-2 space-y-4">
+               <div className="col-span-1 md:col-span-2 space-y-4">
                  <Input 
                     label="Position Entaille" 
-                    placeholder="Métal base, ZAT..." 
                     value={data.notchPosition} 
                     onChange={(e) => updateField('notchPosition', e.target.value)} 
-                    guidePoint="Point 2305"
-                    guideText="Vérifier position entaille (ZAT, racine...) par rapport zones singulières."
                  />
                  <div className="flex items-center gap-2">
                    <input type="checkbox" checked={data.notchGeometryCheck} onChange={(e) => updateField('notchGeometryCheck', e.target.checked)} className="w-5 h-5"/>
@@ -504,9 +481,8 @@ export default function App() {
                </div>
             )}
             
-            {/* Surface for Hardness */}
             {data.selectedTestType === TestType.DURETE && (
-               <Input label="État de surface" className="col-span-2" placeholder="Meulage, polissage..." value={data.surfaceCondition} onChange={(e) => updateField('surfaceCondition', e.target.value)} />
+               <Input label="État de surface" className="col-span-1 md:col-span-2" placeholder="Meulage, polissage..." value={data.surfaceCondition} onChange={(e) => updateField('surfaceCondition', e.target.value)} />
             )}
           </div>
         </CollapsibleSection>
@@ -517,7 +493,6 @@ export default function App() {
           icon={Gauge} 
           defaultOpen={true}
         >
-          {/* SWITCH AFCEN 18-198 */}
           <div className="mb-6 bg-purple-50 p-4 rounded-lg border border-purple-100">
             <div className="flex items-center gap-3 mb-3">
                  <div 
@@ -528,40 +503,35 @@ export default function App() {
                  </div>
                  <div>
                    <span className="font-bold text-sm text-purple-900">Le Guide AFCEN RM 18-198 est-il applicable ?</span>
-                   <p className="text-xs text-purple-600 opacity-80">Cf Point 6 de la note aux utilisateurs.</p>
                  </div>
             </div>
 
             {data.isAfcenApplicable && (
-               <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
+               /* RESPONSIVE GRID ICI */
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
                   <Input 
                     label="Paramètres Relevés" 
                     value={data.afcenParameters} 
                     onChange={(e) => updateField('afcenParameters', e.target.value)}
-                    guidePoint="AFCEN"
-                    guideText="Relever les paramètres (Cf note guide)."
                   />
                   <Input 
                     label="Valeurs Relevées" 
                     value={data.afcenValues} 
                     onChange={(e) => updateField('afcenValues', e.target.value)}
-                    guidePoint="AFCEN"
-                    guideText="Relever les valeurs d'essais associées."
                   />
                </div>
             )}
           </div>
           
-          {/* TRACTION FORMS */}
           {(data.selectedTestType === TestType.TRACTION_AMBIANT || data.selectedTestType === TestType.TRACTION_HAUTE_TEMP) && (
             <div className="space-y-6">
-              {/* Pilotage */}
               <div className="bg-gray-50 p-4 rounded border border-gray-200">
                 <h4 className="font-bold text-gray-600 mb-4 flex items-center gap-2"><Settings size={16}/> Pilotage (2104 / 2207)</h4>
                 
                 {data.selectedTestType === TestType.TRACTION_HAUTE_TEMP && (
                   <div className="mb-4 bg-orange-100 p-3 rounded text-orange-900 border border-orange-200">
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* RESPONSIVE GRID ICI */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Input 
                         label="Température Essai (°C)" 
                         type="number" 
@@ -570,26 +540,23 @@ export default function App() {
                       />
                       <Input 
                         label="Temps Maintien" 
-                        placeholder="Av. début essai" 
                         value={data.soakingTime} 
                         onChange={(e) => updateField('soakingTime', e.target.value)} 
-                        guidePoint="Point 2209"
-                        guideText="Vérifier temps de maintien pour homogénéité avant début essai."
                       />
                     </div>
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4">
-                  <Input label="Vérifs Amarrage" placeholder="Alignement..." className="col-span-2" value={data.grippingChecks} onChange={(e) => updateField('grippingChecks', e.target.value)} />
+                {/* RESPONSIVE GRID ICI */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input label="Vérifs Amarrage" className="md:col-span-2" value={data.grippingChecks} onChange={(e) => updateField('grippingChecks', e.target.value)} />
                   <Input 
                     label="Mode Pilotage" 
-                    placeholder="Vitesse déf/contrainte" 
-                    className="col-span-2" 
+                    className="md:col-span-2" 
                     value={data.pilotMode} 
                     onChange={(e) => updateField('pilotMode', e.target.value)} 
                     guidePoint="Point 2104"
-                    guideText="Vérifier conformité valeurs paramétrage (vitesse déformation ou déplacement traverses) selon NF EN 6892."
+                    guideText="Vérifier conformité valeurs paramétrage."
                   />
                   <Select
                       label="Méthode Norme"
@@ -601,8 +568,8 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Results */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* RESPONSIVE GRID ICI */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <Input label="Rp 0.2 (MPa)" type="number" value={data.rp02} onChange={(e) => updateField('rp02', e.target.value)} />
                  <Input label="Rm (MPa)" type="number" value={data.rm} onChange={(e) => updateField('rm', e.target.value)} />
                  <Input label="A %" type="number" value={data.aPercent} onChange={(e) => updateField('aPercent', e.target.value)} />
@@ -623,25 +590,24 @@ export default function App() {
             </div>
           )}
 
-          {/* FLEXION FORM */}
           {data.selectedTestType === TestType.FLEXION && (
              <div className="space-y-4">
                 <div className="bg-blue-50 p-4 rounded border border-blue-100">
                   <h4 className="font-bold text-blue-800 mb-3">Conditions Essai (2307/2308)</h4>
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* RESPONSIVE GRID ICI */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input label="Température Essai" type="number" value={data.testTempFlexion} onChange={(e) => updateField('testTempFlexion', e.target.value)} />
                     <Input 
                         label="Temps Transfert" 
                         placeholder="< 5 sec" 
                         value={data.transferTime} 
                         onChange={(e) => updateField('transferTime', e.target.value)} 
-                        guidePoint="Point 2308"
-                        guideText="Si température autre que ambiante : transfert doit durer moins de 5 secondes."
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* RESPONSIVE GRID ICI */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <Input label="KV (Joules)" type="number" value={data.energyKV} onChange={(e) => updateField('energyKV', e.target.value)} />
                    <Input label="Exp. Latérale (mm)" type="number" value={data.lateralExpansion} onChange={(e) => updateField('lateralExpansion', e.target.value)} />
                    <Input label="Cristallinité (%)" type="number" value={data.crystallinity} onChange={(e) => updateField('crystallinity', e.target.value)} />
@@ -655,10 +621,10 @@ export default function App() {
              </div>
           )}
 
-          {/* DURETE FORM */}
           {data.selectedTestType === TestType.DURETE && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              {/* RESPONSIVE GRID ICI */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input label="Charge Essai" value={data.load} onChange={(e) => updateField('load', e.target.value)} />
                 <Input label="Temps Maintien (s)" type="number" value={data.holdTime} onChange={(e) => updateField('holdTime', e.target.value)} />
               </div>
@@ -683,6 +649,7 @@ export default function App() {
           <div className="space-y-4">
             <h4 className="font-bold text-gray-700 border-b pb-2">Contenu du Procès-Verbal</h4>
             
+            {/* RESPONSIVE GRID ICI */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label className="flex items-center space-x-3 p-3 bg-white border rounded-lg hover:bg-gray-50">
                 <input type="checkbox" checked={data.pvContentCompliant} onChange={(e) => updateField('pvContentCompliant', e.target.checked)} className="w-5 h-5 rounded text-edf-blue"/>
@@ -705,7 +672,6 @@ export default function App() {
               </label>
             </div>
 
-            {/* Specific checks per test */}
             <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                {(data.selectedTestType === TestType.TRACTION_AMBIANT || data.selectedTestType === TestType.TRACTION_HAUTE_TEMP) && (
                  <Input 
@@ -713,8 +679,6 @@ export default function App() {
                    placeholder="Lissage courbe, vitesse déformation..."
                    value={data.tractionPvDetails}
                    onChange={(e) => updateField('tractionPvDetails', e.target.value)}
-                   guidePoint="Point 2108"
-                   guideText="En cas de divergence, demander modalités d'exploitation (lissage, vitesse...)."
                  />
                )}
 
@@ -724,8 +688,6 @@ export default function App() {
                    placeholder="Calcul énergie, non rupture..."
                    value={data.flexionPvDetails}
                    onChange={(e) => updateField('flexionPvDetails', e.target.value)}
-                   guidePoint="Point 2309"
-                   guideText="Préciser si éprouvette non rompue. Vérifier calcul énergie absorbée."
                  />
                )}
 
@@ -735,8 +697,6 @@ export default function App() {
                    placeholder="Courbes filiation, points..."
                    value={data.hardnessPvDetails}
                    onChange={(e) => updateField('hardnessPvDetails', e.target.value)}
-                   guidePoint="Point 2404"
-                   guideText="Vérifier courbes filiation, nombre de points, espacement."
                  />
                )}
             </div>
@@ -802,7 +762,7 @@ export default function App() {
       </main>
 
       {/* Floating Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-lg z-40">
         <div className="max-w-3xl mx-auto flex gap-3">
           <button 
             onClick={() => {
