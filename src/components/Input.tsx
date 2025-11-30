@@ -48,7 +48,7 @@ export const Input: React.FC<InputProps> = ({ label, helperText, error, classNam
       </div>
       
       <input
-        className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:outline-none transition-colors ${
+        className={`w-full px-4 py-3 rounded-lg border text-base appearance-none bg-white focus:ring-2 focus:outline-none transition-colors min-h-[48px] ${
           error 
             ? 'border-red-500 focus:ring-red-200 bg-red-50' 
             : 'border-gray-300 focus:border-edf-blue focus:ring-blue-100'
@@ -78,16 +78,24 @@ export const Select: React.FC<SelectProps> = ({ label, options, guidePoint, guid
         </label>
         <HelpToggle guidePoint={guidePoint} guideText={guideText} />
       </div>
-      <select
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-edf-blue focus:ring-2 focus:ring-blue-100 focus:outline-none bg-white"
-        {...props}
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+      <div className="relative">
+        <select
+          className="w-full px-4 py-3 rounded-lg border border-gray-300 text-base appearance-none bg-white focus:border-edf-blue focus:ring-2 focus:ring-blue-100 focus:outline-none min-h-[48px]"
+          {...props}
+        >
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        {/* Petite flèche personnalisée pour remplacer celle de Safari */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+          <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };
