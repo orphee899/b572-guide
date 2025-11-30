@@ -1,0 +1,7 @@
+{
+  "name": "B572 Guide Surveillance",
+  "description": "Application mobile de surveillance des essais mécaniques (Traction, Flexion, Dureté) selon le guide EDF B572. Permet la saisie terrain, la vérification de conformité et l'export CSV.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
